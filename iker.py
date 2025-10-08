@@ -409,7 +409,7 @@ def discovery (args, targets, vpns):
 					else:
 						printMessage ("\033[92m[*]\033[0m IKE service identified at: %s" % ip, args.output)
 				
-				ip = line.split()[0]
+				ip = target
 				info = line
 			else:
 				info = info + line
@@ -458,7 +458,7 @@ def checkIKEv2 (args, targets, vpns):
 						else:
 							printMessage ("[*] IKE version 1 support was not identified in this host (%s). iker will not perform more tests against this host." % ip, args.output)
 
-					ip = line.split()[0]
+					ip = target
 					info = line
 				
 			if info and ip not in ips:
@@ -527,11 +527,11 @@ def fingerprintVID (args, vpns, handshake=None):
 		transform = ""
 		vid = ""
 		for line in hshk.splitlines():
-			
-			if b"SA=" in line:
+			line = str(line)
+			if "SA=" in line:
 				transform = line.strip()[4:-1]
 			
-			if b"VID=" in line and b"(" in line and b")" in line and b"draft-ietf" not in line and b"IKE Fragmentation" not in line and b"Dead Peer Detection" not in line and b"XAUTH" not in line and b"RFC 3947" not in line and b"Heartbeat Notify" not in line:
+			if "VID=" in line and "(" in line and ")" in line and "draft-ietf" not in line and "IKE Fragmentation" not in line and "Dead Peer Detection" not in line and "XAUTH" not in line and "RFC 3947" not in line and "Heartbeat Notify" not in line:
 				
 				vid = line[line.index(b"(")+1:line.index(b")")]
 		
@@ -567,7 +567,7 @@ def fingerprintShowbackoff (args, vpns, transform="", vpnip=""):
 			
 			# Fingerprint based on the VPN service behaviour
 			for line in process.stdout.readlines():
-				
+				line = str(line)
 				if "Implementation guess:" in line:
 					
 					vendor = line[line.index('Implementation guess:')+22:].strip()
@@ -615,7 +615,7 @@ def checkEncriptionAlgs (args, vpns):
 							info = ""
 							new = False
 							for line in output.splitlines():
-								
+								line = str(line)
 								if "Starting ike-scan" in line or "Ending ike-scan" in line or line.strip() == "":
 									continue
 								
@@ -673,7 +673,7 @@ def checkAggressive (args, vpns):
 							info = ""
 							new = False
 							for line in output.splitlines():
-								
+								line = str(line)
 								if "Starting ike-scan" in line or "Ending ike-scan" in line or line.strip() == "":
 									continue
 								
